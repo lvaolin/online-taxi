@@ -9,6 +9,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.online.taxi.common.dto.ResponseResult;
 import com.online.taxi.common.dto.sms.SmsSendRequest;
 import com.online.taxi.driver.constant.HttpUrlConstants;
+import com.online.taxi.driver.exception.BusinessException;
 import com.online.taxi.driver.exception.HystrixIgnoreException;
 import com.online.taxi.driver.service.RestTemplateRequestService;
 
@@ -27,7 +28,6 @@ public class RestTemplateRequestServiceImpl implements RestTemplateRequestServic
 	commandProperties = {
 			@HystrixProperty(name = "fallback.enabled",value = "true"),
 			@HystrixProperty(name = "circuitBreaker.forceOpen",value = "false")
-			
 	})
 	public ResponseResult smsSend(SmsSendRequest smsSendRequest) {
 		
@@ -36,7 +36,7 @@ public class RestTemplateRequestServiceImpl implements RestTemplateRequestServic
 //			int i = 1/0;
 //		} catch (Exception e) {
 //			// TODO: handle exception
-////			throw new BusinessException("熔断忽略的异常，继承HystrixBadRequestException");
+//			throw new BusinessException("熔断忽略的异常，继承HystrixBadRequestException");
 //			throw new HystrixIgnoreException("熔断忽略的异常，忽略属性设置");
 //		}
 		
@@ -44,10 +44,16 @@ public class RestTemplateRequestServiceImpl implements RestTemplateRequestServic
 		return restTemplate.postForEntity(url, smsSendRequest, ResponseResult.class).getBody();
 	}
 	
+//	private ResponseResult sendFail(SmsSendRequest smsSendRequest) {
+//		//备用逻辑
+//		return ResponseResult.fail(-3, "resttemplate熔断");
+//	}
+	
 	private ResponseResult sendFail(SmsSendRequest smsSendRequest ,Throwable throwable) {
 		log.info("异常信息："+throwable);
 		//备用逻辑
-		return ResponseResult.fail(-3, "resttemplate熔断");
+		
+		return ResponseResult.fail(-3, "restTemplate熔断");
 	}
 
 }

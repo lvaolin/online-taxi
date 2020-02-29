@@ -1,3 +1,13 @@
+# 基础
+# 演示功能：
+# 1、默认。
+# 2、网关负载均衡。
+# 3、路由端点
+
+#api-driver: 
+#  ribbon: 
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
 server:
   port: 9100
 
@@ -20,59 +30,8 @@ eureka:
       defaultZone: http://root:root@eureka-7900:7900/eureka/
   instance: 
     hostname: localhost
-    instance-id: online-taxi-gateway 
+    instance-id: online-taxi-zuul 
 
-#--网关负载均衡策略------
-#api-driver: 
-#  ribbon: 
-#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
-
-#----------------------------------
-#网关
-#/**匹配后面所有路径
-zuul:
-#  prefix: /api
-  # 网关转换后的地址，是否移除前缀
-#  strip-prefix: true
-  routes:
-        
-        # 通过url配置
-#    custom-zuul-name: 
-#      path: /zuul-custom-name/**
-#      url: http://localhost:9002/
-#      strip-prefix: false  
-
-        #通过serviceId配置  
-#    custom-zuul-name2: 
-#      path: /zuul-custom-name2/**
-#      service-id: api-driver
-#      strip-prefix: true
-
-    service-sms: /gate-way/sms/**
-    api-driver: /zuul-api-driver/**
-    
-        #忽略 指定微服务
-#  ignored-services:
-#  - api-driver
-
-      # 忽略全部
-#  ignored-services: '*'
-  
-      # 忽略正则
-#  ignored-patterns: 
-#  - /*-driver/**
-
-    #以下配置为空表示：所有请求头都透传到后面微服务。
-  sensitive-headers: token
-  
-#-------------配合上面custom-zuul-name2------------------
-#api-driver:  
-#  ribbon: 
-#    listOfServers: localhost:9003,localhost:9002
-#ribbon: 
-#  eureka:
-#    enabled: false    
-#-------------------------------
 management:
   endpoints:
     web:
